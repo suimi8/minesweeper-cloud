@@ -45,7 +45,7 @@ const MINE_LEVEL_LABELS = {
 };
 
 const EMAIL_TEMPLATE_PARAMS = [
-  { key: "username", label: "买家用户名", description: "下单用户的 Linux.do 用户名或本地用户名。", sample: "suimi" },
+  { key: "username", label: "买家用户名", description: "下单用户的 Linux.do 用户名或本地用户名。", sample: "buyer_name" },
   { key: "order_id", label: "订单号", description: "商城订单唯一编号，用于用户核对订单。", sample: "07d04ff1-96b1-4433-a0ea-2b400730f82a" },
   { key: "product_name", label: "商品名称", description: "订单购买的商品名称。", sample: "测试商品" },
   { key: "delivery_note", label: "交付内容", description: "管理员交付说明、卡密或自动交付凭证。", sample: "这里会显示交付内容或卡密凭证。" },
@@ -796,7 +796,7 @@ function renderContactEditorRow(contact) {
         </select>
       </label>
       <label>显示名称<input name="contactLabel" value="${escapeAttr(contact.label || contactTypeLabel(type))}" placeholder="例如 TG 私聊"></label>
-      <label>账号/群号/链接<input name="contactValue" value="${escapeAttr(contact.value || "")}" placeholder="例如 @suimigg、123456、https://..."></label>
+      <label>账号/群号/链接<input name="contactValue" value="${escapeAttr(contact.value || "")}" placeholder="例如 @yourname、123456、https://..."></label>
       <label>自定义跳转链接<input name="contactUrl" value="${escapeAttr(contact.url || "")}" placeholder="可选，优先使用"></label>
       <button class="btn btn-small btn-danger" type="button" data-remove-contact>删除</button>
     </div>
@@ -3795,7 +3795,7 @@ function renderAdminPushSettings(root) {
 
 function renderAdminEmailSettings(root) {
   const emailService = state.admin.settings.emailService || {};
-  const resendFrom = emailService.resendFrom || "Linuxdo Mall <mall@suimi.eu.cc>";
+  const resendFrom = emailService.resendFrom || "Linuxdo Mall <mall@example.com>";
   root.innerHTML = `
     <section class="admin-card admin-form-section">
       <h3>Resend 邮件配置</h3>
@@ -3812,7 +3812,7 @@ function renderAdminEmailSettings(root) {
       <ol class="email-setup-list">
         <li>
           <strong>添加并验证域名</strong>
-          <p>进入 Resend 后台的 Domains，添加 <code>suimi.eu.cc</code>，然后按 Resend 给出的记录在 Cloudflare DNS 中添加。当前已验证时，Resend 页面会显示 <code>Verified</code>。</p>
+          <p>进入 Resend 后台的 Domains，添加你的发信域名，然后按 Resend 给出的记录在 Cloudflare DNS 中添加。当前已验证时，Resend 页面会显示 <code>Verified</code>。</p>
         </li>
         <li>
           <strong>Cloudflare DNS 记录填写规则</strong>
@@ -3820,17 +3820,17 @@ function renderAdminEmailSettings(root) {
 TXT send                 v=spf1 include:amazonses.com ~all
 TXT resend._domainkey    p=Resend 给出的 DKIM 公钥
 TXT _dmarc               v=DMARC1; p=none;</pre>
-          <p>注意：在 Cloudflare 的 <code>suimi.eu.cc</code> 域名下，名称只填 <code>send</code> 和 <code>resend._domainkey</code>，不要再追加 <code>.suimi.eu.cc</code>。这里的 <code>feedback-smtp</code> 是 DNS 记录值，不是后台要填写的邮件服务器。</p>
+          <p>注意：在 Cloudflare 的域名 DNS 页面里，记录名称只填 Resend 提供的主机名前缀，不要重复追加根域名。这里的 SMTP 字样通常是 DNS 记录值，不是后台要填写的邮件服务器。</p>
         </li>
         <li>
           <strong>配置 Cloudflare Pages Secret</strong>
-          <pre class="email-setup-code">npx wrangler pages secret put RESEND_API_KEY --project-name minesweeper-cloud
-npx wrangler pages secret put RESEND_FROM --project-name minesweeper-cloud</pre>
-          <p><code>RESEND_API_KEY</code> 填 Resend 的 API Key；<code>RESEND_FROM</code> 建议填写 <code>Linuxdo Mall &lt;mall@suimi.eu.cc&gt;</code>。</p>
+          <pre class="email-setup-code">npx wrangler pages secret put RESEND_API_KEY --project-name &lt;cloudflare-project-name&gt;
+npx wrangler pages secret put RESEND_FROM --project-name &lt;cloudflare-project-name&gt;</pre>
+          <p><code>RESEND_API_KEY</code> 填 Resend 的 API Key；<code>RESEND_FROM</code> 建议填写 <code>Linuxdo Mall &lt;mall@example.com&gt;</code>。</p>
         </li>
         <li>
           <strong>重新部署并测试</strong>
-          <pre class="email-setup-code">npx wrangler pages deploy dist --project-name minesweeper-cloud --branch main</pre>
+          <pre class="email-setup-code">npx wrangler pages deploy dist --project-name &lt;cloudflare-project-name&gt; --branch main</pre>
           <p>部署完成后，用下方测试发件功能验证。测试成功后，订单发货通知和用户测试邮件会走同一套 Resend 通道。</p>
         </li>
       </ol>
@@ -4046,7 +4046,7 @@ function renderAdminRateLimits(root) {
           <label>反馈奖励最大金额<input name="feedbackRewardMax" type="number" min="0" max="100000" value="${Number(limits.feedbackRewardMax)}"></label>
           <label>反馈奖励默认金额<input name="feedbackRewardDefault" type="number" min="0" max="100000" value="${Number(limits.feedbackRewardDefault)}"></label>
           <label>失败登录统计窗口（分钟）<input name="failedLoginWindowMinutes" type="number" min="1" max="10080" value="${Number(limits.failedLoginWindowMinutes)}"></label>
-          <label>失败登录拉黑阈值<input name="failedLoginMaxAttempts" type="number" min="0" max="100" value="${Number(limits.failedLoginMaxAttempts)}"><small class="muted">0 表示不自动拉黑。suimi / 126431 不受此限制。</small></label>
+          <label>失败登录拉黑阈值<input name="failedLoginMaxAttempts" type="number" min="0" max="100" value="${Number(limits.failedLoginMaxAttempts)}"><small class="muted">0 表示不自动拉黑。超级管理员不受此限制。</small></label>
         </div>
       </section>
       <section class="admin-card admin-form-section">
@@ -5873,7 +5873,7 @@ function openEmailTemplatePreview(template) {
 
 function applyTemplatePreview(content, params = []) {
   const values = {
-    username: state.user?.linuxdo?.username || state.user?.username || "suimi",
+    username: state.user?.linuxdo?.username || state.user?.username || "buyer_name",
     order_id: "demo-order-id",
     product_name: "示例商品",
     delivery_note: "这里会显示交付内容或卡密凭证。",

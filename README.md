@@ -21,17 +21,30 @@ npm run build:pages
 ## 部署
 
 ```bash
-npx wrangler d1 migrations apply minesweeper-cloud --remote
-npx wrangler pages deploy dist --project-name minesweeper-cloud
+npx wrangler d1 migrations apply <d1-database-name> --remote
+npx wrangler pages deploy dist --project-name <cloudflare-project-name>
 ```
 
 ## 回调地址
 
 ```text
-https://minesweeper-cloud.pages.dev/api/auth/linuxdo/callback
+https://<your-domain>/api/auth/linuxdo/callback
 ```
 
-## 超级管理员
+## 必要配置
 
-- Linux.do 用户名：`suimi`
-- Linux.do ID：`126431`
+生产环境请通过 Cloudflare Secrets 或环境变量配置，不要把真实值写入代码或 README。
+
+```bash
+npx wrangler pages secret put MALL_SUPER_ADMIN_USERNAME --project-name <cloudflare-project-name>
+npx wrangler pages secret put MALL_SUPER_ADMIN_LINUXDO_ID --project-name <cloudflare-project-name>
+npx wrangler pages secret put LINUXDO_CLIENT_ID --project-name <cloudflare-project-name>
+npx wrangler pages secret put LINUXDO_CLIENT_SECRET --project-name <cloudflare-project-name>
+npx wrangler pages secret put LINUXDO_CALLBACK_URL --project-name <cloudflare-project-name>
+```
+
+可选配置按启用的功能填写：
+
+- `CREDIT_EPAY_PID` / `CREDIT_EPAY_KEY`
+- `RESEND_API_KEY` / `RESEND_FROM`
+- `PUSHME_ADMIN_KEY` / `PUSHME_USER_KEY`

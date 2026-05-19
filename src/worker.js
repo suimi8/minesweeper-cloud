@@ -10,8 +10,6 @@ const ADMIN_MAX_LIST_LIMIT = 5000;
 const D1_ID_CHUNK_SIZE = 80;
 const LINUXDO_PROVIDER = "linuxdo";
 const LINUXDO_CONNECT_BASE = "https://connect.linux.do";
-const SUPER_ADMIN_USERNAME = "suimi";
-const SUPER_ADMIN_LINUXDO_ID = "126431";
 const DEFAULT_BASE_PATH = "/";
 const PUSHME_GROUP = "Linuxdo Mall";
 const MALL_PENDING_ORDER_TTL_MS = 5 * 60 * 1000;
@@ -247,13 +245,7 @@ const MALL_DEFAULT_SETTINGS = {
     scope: DEFAULT_BACKUP_SCOPE
   },
   limits: DEFAULT_MALL_LIMITS,
-  adminUsers: {
-    suimi: {
-      role: "super_admin",
-      name: "suimi",
-      linuxdoId: SUPER_ADMIN_LINUXDO_ID
-    }
-  },
+  adminUsers: {},
   theme: "system"
 };
 
@@ -667,10 +659,11 @@ async function handleLinuxDoCallback(request, env, basePath = DEFAULT_BASE_PATH)
 
   const token = await fetchLinuxDoToken(request, env, code);
   const profile = await fetchLinuxDoProfile(env, token.access_token);
-  if (!isSuperAdminLinuxDoProfile(profile)) {
+  const isSuperAdminProfile = isSuperAdminLinuxDoProfile(profile, env);
+  if (!isSuperAdminProfile) {
     await assertNotBlacklisted(request, env);
   }
-  if (await isMallMaintenance(env) && !isSuperAdminLinuxDoProfile(profile)) {
+  if (await isMallMaintenance(env) && !isSuperAdminProfile) {
     await recordMallLoginAttempt(request, env, profile.username || String(profile.id || ""), false, "网站维护中，普通用户禁止登录");
     return redirectAuthResult(request, "maintenance", basePath, [
       clearOAuthStateCookie(request),
@@ -737,7 +730,7 @@ async function login(request, env) {
     throw error;
   }
   const { username, password } = credentials;
-  if (!isSuperAdminLoginName(username)) {
+  if (!isSuperAdminLoginName(username, env)) {
     await assertNotBlacklisted(request, env);
   }
   const user = await env.DB.prepare(
@@ -1055,7 +1048,7 @@ async function requireUser(request, env) {
 
 async function requireAdmin(request, env) {
   const user = await requireUser(request, env);
-  if (!isSuperAdminUser(user)) {
+  if (!isSuperAdminUser(user, env)) {
     throw new ApiError(403, "admin_forbidden", "需要超级管理员权限");
   }
 
@@ -1123,7 +1116,7 @@ async function getOptionalUser(request, env) {
     sessionCreatedAt: row.session_created_at,
     expiresAt: row.expires_at
   };
-  user.isAdmin = isSuperAdminUser(user);
+  user.isAdmin = isSuperAdminUser(user, env);
   await touchUserAccess(env, user.id, request);
   return user;
 }
@@ -1170,22 +1163,42 @@ async function loadUserById(env, userId) {
     notifyEmailEnabled: Boolean(row.notify_email_enabled),
     lastTestEmailAt: row.last_test_email_at || null
   };
-  user.isAdmin = isSuperAdminUser(user);
+  user.isAdmin = isSuperAdminUser(user, env);
   return user;
 }
 
-function isSuperAdminUser(user) {
+function getSuperAdminConfig(env = {}) {
+  const username = normalizeText(
+    env.MALL_SUPER_ADMIN_USERNAME || env.SUPER_ADMIN_USERNAME || "",
+    80
+  ).toLowerCase();
+  const linuxdoId = normalizeText(
+    env.MALL_SUPER_ADMIN_LINUXDO_ID || env.SUPER_ADMIN_LINUXDO_ID || "",
+    80
+  );
+  return {
+    username,
+    linuxdoId,
+    configured: Boolean(username && linuxdoId)
+  };
+}
+
+function isSuperAdminUser(user, env = {}) {
+  const admin = getSuperAdminConfig(env);
+  if (!admin.configured) return false;
   const linuxdoId = String(user?.linuxdo?.id || "");
   const linuxdoUsername = String(user?.linuxdo?.username || "").trim().toLowerCase();
   return user?.provider === LINUXDO_PROVIDER &&
-    linuxdoId === SUPER_ADMIN_LINUXDO_ID &&
-    linuxdoUsername === SUPER_ADMIN_USERNAME;
+    linuxdoId === admin.linuxdoId &&
+    linuxdoUsername === admin.username;
 }
 
-function isSuperAdminLinuxDoProfile(profile) {
+function isSuperAdminLinuxDoProfile(profile, env = {}) {
+  const admin = getSuperAdminConfig(env);
+  if (!admin.configured) return false;
   const linuxdoId = String(profile?.id || "");
   const linuxdoUsername = String(profile?.username || "").trim().toLowerCase();
-  return linuxdoId === SUPER_ADMIN_LINUXDO_ID && linuxdoUsername === SUPER_ADMIN_USERNAME;
+  return linuxdoId === admin.linuxdoId && linuxdoUsername === admin.username;
 }
 
 async function getAdminOverview(env, admin) {
@@ -3416,7 +3429,7 @@ async function handleMallChatRoute(request, env, user, ctx = null) {
   await ensureChatRuntime(env);
   const url = new URL(request.url);
   const path = url.pathname;
-  const isAdmin = isSuperAdminUser(user);
+  const isAdmin = isSuperAdminUser(user, env);
 
   if (path === "/api/mall/chat" && request.method === "GET") {
     if (isAdmin && url.searchParams.get("scope") === "admin") {
@@ -3439,7 +3452,7 @@ async function handleMallChatRoute(request, env, user, ctx = null) {
   }
 
   const conversation = await loadMallChatConversation(env, conversationId);
-  assertMallChatAccess(conversation, user);
+      assertMallChatAccess(conversation, user, env);
 
   if (request.method === "GET" && action === "messages") {
     const afterId = Math.max(0, Number.parseInt(url.searchParams.get("afterId") || "0", 10) || 0);
@@ -6797,11 +6810,11 @@ function cleanExtractedUrl(value) {
   return text.replace(/\\+"/g, "\"").trim();
 }
 
-function assertMallChatAccess(conversation, user) {
+function assertMallChatAccess(conversation, user, env = {}) {
   if (!conversation) {
     throw new ApiError(404, "conversation_not_found", "会话不存在");
   }
-  if (isSuperAdminUser(user) || conversation.userId === user.id) {
+  if (isSuperAdminUser(user, env) || conversation.userId === user.id) {
     return;
   }
   throw new ApiError(403, "chat_forbidden", "无权访问该会话");
@@ -9502,7 +9515,7 @@ async function maybeBlacklistFailedLoginIp(request, env, username = "") {
   try {
     await ensureMallRuntime(env);
     const ip = getClientIp(request);
-    if (!ip || isSuperAdminLoginName(username)) {
+    if (!ip || isSuperAdminLoginName(username, env)) {
       return;
     }
     const settings = await getMallSettings(env);
@@ -9535,8 +9548,9 @@ async function maybeBlacklistFailedLoginIp(request, env, username = "") {
   }
 }
 
-function isSuperAdminLoginName(username) {
-  return String(username || "").trim().toLowerCase() === SUPER_ADMIN_USERNAME;
+function isSuperAdminLoginName(username, env = {}) {
+  const admin = getSuperAdminConfig(env);
+  return Boolean(admin.configured && String(username || "").trim().toLowerCase() === admin.username);
 }
 
 function getClientIp(request) {
@@ -9550,7 +9564,7 @@ function getClientIp(request) {
 
 async function assertNotBlacklisted(request, env, user = null) {
   try {
-    if (user && isSuperAdminUser(user)) {
+    if (user && isSuperAdminUser(user, env)) {
       return;
     }
     await ensureMallRuntime(env);
@@ -9561,7 +9575,7 @@ async function assertNotBlacklisted(request, env, user = null) {
         throw new ApiError(403, "blacklisted", "当前 IP 已被风控拦截");
       }
     }
-    if (user && !isSuperAdminUser(user)) {
+    if (user && !isSuperAdminUser(user, env)) {
       const values = [
         user.username,
         user.linuxdo?.username,
@@ -9592,7 +9606,7 @@ async function assertMallRateLimit(request, env, user, scope, options = {}) {
   const normalizedScope = normalizeText(scope, 80) || "default";
   const ip = getClientIp(request);
   const subject = normalizeText(user?.id || user?.linuxdo?.id || ip || "anonymous", 120);
-  if (user && isSuperAdminUser(user)) {
+  if (user && isSuperAdminUser(user, env)) {
     return;
   }
   const cutoff = new Date(Date.now() - windowSeconds * 1000).toISOString();
