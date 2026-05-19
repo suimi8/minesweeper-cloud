@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="description" content="Linuxdo-Mall Cloudflare 原生商城，支持 Linux.do 登录、商品、订单、卡密、优惠券、评价、后台和扫雷娱乐功能。">
+    <meta name="description" content="Linuxdo Mall Cloudflare 原生商城，支持 Linux.do 登录、商品、订单、卡密、优惠券、评价、后台管理，扫雷仅作为娱乐活动入口。">
     <meta name="theme-color" content="#050509">
     <meta name="color-scheme" content="dark light">
-    <title>Linuxdo-Mall</title>
+    <title>Linuxdo Mall</title>
     <link id="siteFavicon" rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/mall.css">
     <script defer src="/mall.js"></script>
@@ -18,7 +18,7 @@
           <span class="brand-logo" data-site-logo>L</span>
           <span>
             <strong data-site-title>Linuxdo Mall</strong>
-            <small data-site-subtitle>官方权益流转中心</small>
+            <small data-site-subtitle>商城商品与订单中心</small>
           </span>
         </a>
         <div class="topbar-actions">
@@ -28,7 +28,7 @@
               <span class="avatar" id="userAvatar">U</span>
               <span class="user-menu-user">
                 <strong id="userName">未登录</strong>
-                <small id="userMeta">登录后同步订单和扫雷数据</small>
+                <small id="userMeta">登录后同步订单和账户信息</small>
               </span>
               <span class="user-menu-caret" aria-hidden="true">⌄</span>
             </button>
@@ -42,12 +42,12 @@
               </button>
               <label class="user-menu-select front-feature" role="none">
                 <span class="user-menu-item-main">
-                  <strong>云端游戏</strong>
-                  <small>选择娱乐功能</small>
+                  <strong>娱乐活动</strong>
+                  <small>选择商城活动</small>
                 </span>
-                <select id="cloudGameSelect" aria-label="云端游戏">
+                <select id="cloudGameSelect" aria-label="娱乐活动">
                   <option value="">选择游戏</option>
-                  <option value="/games/minesweeper/">扫雷</option>
+                  <option value="/games/minesweeper/">扫雷娱乐</option>
                 </select>
               </label>
               <a class="user-menu-item front-feature" href="/orders" data-route="/orders" role="menuitem">
@@ -79,7 +79,7 @@
         <div class="login-banner-copy">
           <p class="eyebrow">LINUX.DO CONNECT</p>
           <h1>汇智商城</h1>
-          <p>请先使用 Linux.do 登录。登录后才会展示商品、订单、云端游戏和咨询入口。</p>
+          <p>请先使用 Linux.do 登录。登录后才会展示商品、订单、售后和咨询入口。</p>
         </div>
         <div class="login-panel">
           <strong>账号验证</strong>
@@ -117,6 +117,13 @@
               </div>
             </section>
             <div class="product-grid" id="productGrid"></div>
+            <section class="panel home-campaign-panel" id="minesweeperCampaignPanel" hidden>
+              <div class="panel-head">
+                <h2>商城活动</h2>
+                <span>扫雷福利</span>
+              </div>
+              <div class="home-campaign-body"></div>
+            </section>
           </section>
 
           <aside class="activity-rail">

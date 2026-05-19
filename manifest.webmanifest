@@ -1,7 +1,7 @@
 {
-  "name": "扫雷",
-  "short_name": "扫雷",
-  "description": "跨平台扫雷游戏，支持桌面端、移动端和离线运行。",
+  "name": "Linuxdo Mall",
+  "short_name": "商城",
+  "description": "Linuxdo Mall 商城主站，扫雷仅作为娱乐活动入口。",
   "lang": "zh-CN",
   "start_url": "./index.html",
   "scope": "./",

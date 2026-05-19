@@ -1,11 +1,11 @@
-# 扫雷商城 Cloudflare 版
+# Linuxdo Mall Cloudflare 版
 
-当前项目是一个部署在 Cloudflare Pages + Workers + D1 上的商城和扫雷活动系统，保留 Linux.do OAuth 登录，并把扫雷作为商城内的娱乐活动和优惠券来源。
+当前项目是一个部署在 Cloudflare Pages + Workers + D1 上的商城系统，保留 Linux.do OAuth 登录，并把扫雷作为商城内的娱乐活动和优惠券来源。
 
 ## 线上地址
 
 - 商城首页：`https://minesweeper-cloud.pages.dev/`
-- 扫雷功能：`https://minesweeper-cloud.pages.dev/games/minesweeper/`
+- 扫雷活动：`https://minesweeper-cloud.pages.dev/games/minesweeper/`
 - Linux.do 回调地址：`https://minesweeper-cloud.pages.dev/api/auth/linuxdo/callback`
 
 ## 已移植模块
@@ -17,7 +17,7 @@
 - 管理后台：概览、商品、订单、卡密、优惠码、评价、广告、用户、设置、审计日志。
 - Cloudflare D1 持久化数据。
 - 原项目 `static/` 静态资源路径兼容。
-- 扫雷作为商城顶部功能入口，使用同一套登录态和 D1 数据。
+- 扫雷作为商城内的娱乐活动入口，使用同一套登录态和 D1 数据。
 
 ## 不能原样运行的原 Flask 功能
 

@@ -1,6 +1,6 @@
-# Linuxdo-Mall 后台迁移说明
+# Linuxdo Mall 后台说明
 
-当前项目已从原版 Flask + JSON 文件后台迁移为 Cloudflare Pages + Worker + D1。
+当前项目已从原版 Flask + JSON 文件后台迁移为 Cloudflare Pages + Worker + D1，主线以商城为中心，扫雷仅作为娱乐活动模块保留。
 
 ## 已迁移模块
 

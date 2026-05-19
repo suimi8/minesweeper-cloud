@@ -88,7 +88,7 @@ const BACKUP_SCOPE_OPTIONS = [
   { value: "all", label: "全部数据", description: "包含商城、用户、游戏、风控、私聊、抽奖等全部 D1 数据。" },
   { value: "mall", label: "商城业务", description: "商品、订单、卡密、优惠码、评价、广告、邮箱模板、反馈和系统设置。" },
   { value: "users", label: "用户登录", description: "用户、Linux.do 绑定、登录会话。" },
-  { value: "games", label: "云端游戏", description: "扫雷同步数据和排行榜。" },
+  { value: "games", label: "娱乐活动", description: "扫雷娱乐活动的同步数据和排行榜。" },
   { value: "security", label: "风控记录", description: "黑名单、登录失败和访问风控记录。" },
   { value: "chat", label: "私聊消息", description: "会话和消息内容。" },
   { value: "lottery", label: "抽奖记录", description: "每日抽奖和奖品记录。" }
@@ -375,7 +375,7 @@ function applySession() {
         <span class="user-spent-line">本站消费 ${renderMoney(state.userMallSpent || 0)}</span>
       `
       : `
-        <span>登录后同步订单和扫雷数据</span>
+        <span>登录后同步订单和账户信息</span>
         <span class="user-spent-line">本站消费 ${renderMoney(state.userMallSpent || 0)}</span>
       `;
   }
@@ -386,10 +386,10 @@ function applySettings() {
   const settings = state.settings || {};
   const site = settings.siteInfo || {};
   document.body.dataset.theme = settings.theme || "system";
-  document.title = site.title || "Linuxdo-Mall";
+  document.title = site.title || "Linuxdo Mall";
   renderSiteLogo(site);
   qsa("[data-site-title]").forEach((item) => { item.textContent = site.title || "Linuxdo Mall"; });
-  qsa("[data-site-subtitle]").forEach((item) => { item.textContent = site.subtitle || "官方权益流转中心"; });
+  qsa("[data-site-subtitle]").forEach((item) => { item.textContent = site.subtitle || "商城商品与订单中心"; });
   renderAnnouncementBar();
   renderSiteFooter();
 }
@@ -749,15 +749,15 @@ function restoreHomeShell() {
         </section>
         <section class="ad-slot ad-slot-between" id="betweenAdSlot" hidden></section>
         <div class="product-grid" id="productGrid"></div>
-      </section>
-      <aside class="activity-rail">
         <section class="panel home-campaign-panel" id="minesweeperCampaignPanel" hidden>
           <div class="panel-head">
-            <h2>娱乐活动</h2>
-            <span>扫雷赏金</span>
+            <h2>商城活动</h2>
+            <span>扫雷福利</span>
           </div>
           <div class="home-campaign-body"></div>
         </section>
+      </section>
+      <aside class="activity-rail">
         <section class="panel">
           <div class="panel-head">
             <h2>热销榜</h2>
@@ -1826,10 +1826,10 @@ function renderBuyAutoCouponPanel(status = {}, product = {}) {
     return `
       <section class="auto-coupon-panel is-empty">
         <div>
-          <strong>扫雷活动自动券</strong>
+          <strong>活动自动券</strong>
           <p>活动期 ${escapeHtml(formatDate(campaign.startAt))} - ${escapeHtml(formatDate(campaign.endsAt))}，首通自动券：${escapeHtml(rewards.percentText)}；第一名赏金：${rewards.fixedText}。</p>
         </div>
-        <a class="btn btn-small btn-ghost" href="/games/minesweeper/">去通关</a>
+        <a class="btn btn-small btn-ghost" href="/games/minesweeper/">查看活动</a>
       </section>
     `;
   }
@@ -1837,7 +1837,7 @@ function renderBuyAutoCouponPanel(status = {}, product = {}) {
     <section class="auto-coupon-panel">
       <div class="auto-coupon-head">
         <div>
-          <strong>已自动使用扫雷活动券</strong>
+          <strong>已自动使用活动券</strong>
           <p>预计抵扣 ${money(preview.total)}，实际金额以后端下单结果为准。</p>
         </div>
         <span class="badge badge-success">${coupons.length} 张可叠加</span>
@@ -2208,8 +2208,8 @@ function renderAdminTabs() {
       ["blacklist", "风控黑名单"],
       ["loginAttempts", "登录记录"]
     ]],
-    ["云端游戏", [
-      ["minesweeper", "扫雷管理"]
+    ["娱乐活动", [
+      ["minesweeper", "扫雷活动"]
     ]]
   ];
   const root = qs("#adminTabs");
@@ -4301,7 +4301,7 @@ function openBackupImportModal() {
     if (form.get("mode") === "replace" && !confirm("替换导入会清空后台业务数据后重新导入，确认继续？")) return;
     try {
       const text = await file.text();
-      if (/\.sql$/i.test(file.name || "") || text.trimStart().startsWith("-- Linuxdo-Mall D1 SQL Backup")) {
+      if (/\.sql$/i.test(file.name || "") || text.trimStart().startsWith("-- Linuxdo Mall D1 SQL Backup") || text.trimStart().startsWith("-- Linuxdo-Mall D1 SQL Backup")) {
         if (!confirm("SQL 数据库备份会按快照恢复数据，确认导入？")) return;
         await adminUpload("/api/mall/admin/backup/import", text, "SQL 数据库备份", "application/sql;charset=utf-8");
         return;
@@ -4714,9 +4714,9 @@ function renderAdminMinesweeperPanel(root, data) {
   root.innerHTML = `
     <div class="admin-module-head">
       <div>
-        <p class="eyebrow">GAME MODULE</p>
-        <h3>扫雷后台管理</h3>
-        <p class="muted">管理数学扫雷的云端排行榜、同步存档和游戏用户数据。扫雷本身继续使用商城 Linux.do 登录状态。</p>
+        <p class="eyebrow">ACTIVITY MODULE</p>
+        <h3>扫雷活动管理</h3>
+        <p class="muted">管理扫雷娱乐活动的奖励配置、排行榜、同步存档和用户数据。扫雷继续使用商城 Linux.do 登录状态。</p>
       </div>
       <div class="row-actions compact">
         <a class="btn btn-ghost" href="/games/minesweeper/">打开扫雷</a>
@@ -4782,14 +4782,14 @@ function renderAdminMinesweeperCampaign(summary = {}) {
     <div class="admin-card minesweeper-campaign-card">
       <div class="batch-bar">
         <div>
-          <h3>扫雷首通优惠活动</h3>
+          <h3>商城娱乐活动奖励</h3>
           <p class="muted">北京时间 ${escapeHtml(formatDate(campaign.startAt))} - ${escapeHtml(formatDate(campaign.endsAt))}，首通自动券：${escapeHtml(rewards.percentText)}；第一名赏金：${rewards.fixedText}，有效期 ${Number(campaign.validDays || 30)} 天。</p>
         </div>
         <span class="badge ${campaignStatusClass(campaign)}">${escapeHtml(campaignStatusText(campaign))}</span>
       </div>
       <form class="campaign-settings-form" id="minesweeperCampaignSettingsForm">
         <div class="campaign-settings-head">
-          <h4>活动奖励配置</h4>
+          <h4>扫雷活动奖励配置</h4>
           <label class="check-row"><input type="checkbox" name="enabled" ${settings.enabled !== false ? "checked" : ""}> 启用活动</label>
         </div>
         <div class="campaign-settings-grid">
@@ -4809,7 +4809,7 @@ function renderAdminMinesweeperCampaign(summary = {}) {
         </div>
         <div class="form-actions">
           <button class="btn btn-primary" type="submit">保存活动配置</button>
-          <span class="muted">配置保存后，商城首页、扫雷页和自动发券会同步使用。</span>
+          <span class="muted">配置保存后，商城首页活动提示、扫雷页和自动发券会同步使用。</span>
         </div>
       </form>
       <div class="admin-grid compact">
@@ -4961,7 +4961,7 @@ async function saveAdminMinesweeperCampaignSettings(event) {
       levelPercentCoupons,
       levelFirstFixedCoupons
     }
-  }, "扫雷活动配置", "PUT");
+  }, "商城娱乐活动配置", "PUT");
 }
 
 async function adminMinesweeperClearLevel(level) {
@@ -7111,10 +7111,10 @@ function renderMinesweeperCampaignPanel() {
       <span>${escapeHtml(formatDate(campaign.startAt))} - ${escapeHtml(formatDate(campaign.endsAt))}</span>
     </div>
     <div class="home-campaign-prizes">
-      <span><strong>首通自动券</strong>${escapeHtml(rewards.percentText)}</span>
-      <span><strong>第一名赏金</strong>${rewards.fixedText}</span>
+      <span><strong>扫雷娱乐通关券</strong>${escapeHtml(rewards.percentText)}</span>
+      <span><strong>榜首额外券</strong>${rewards.fixedText}</span>
     </div>
-    <a class="btn btn-small btn-primary" href="/games/minesweeper/">去扫雷挑战</a>
+    <a class="btn btn-small btn-ghost" href="/games/minesweeper/">进入娱乐活动</a>
   `;
 }
 
@@ -7556,7 +7556,7 @@ logoutButton?.addEventListener("click", async () => {
 cloudGameSelect?.addEventListener("change", (event) => {
   if (isFrontMaintenanceLocked()) {
     event.currentTarget.value = "";
-    showToast("网站维护中，暂时无法使用云端游戏", "error");
+    showToast("网站维护中，暂时无法使用娱乐活动", "error");
     return;
   }
   const target = event.currentTarget.value;

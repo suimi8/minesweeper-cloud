@@ -13,7 +13,7 @@ const LINUXDO_CONNECT_BASE = "https://connect.linux.do";
 const SUPER_ADMIN_USERNAME = "suimi";
 const SUPER_ADMIN_LINUXDO_ID = "126431";
 const DEFAULT_BASE_PATH = "/";
-const PUSHME_GROUP = "Linuxdo-Mall";
+const PUSHME_GROUP = "Linuxdo Mall";
 const MALL_PENDING_ORDER_TTL_MS = 5 * 60 * 1000;
 const MINESWEEPER_COUPON_CAMPAIGN_KEY = "minesweeper-20260518";
 const MINESWEEPER_COUPON_CAMPAIGN_START_MS = Date.UTC(2026, 4, 17, 16, 0, 0);
@@ -132,7 +132,7 @@ const DEFAULT_MALL_LIMITS = {
   failedLoginMaxAttempts: 3,
   rateLimits: DEFAULT_RATE_LIMITS
 };
-const SQL_BACKUP_MARKER = "-- Linuxdo-Mall D1 SQL Backup";
+const SQL_BACKUP_MARKER = "-- Linuxdo Mall D1 SQL Backup";
 const MAX_SQL_IMPORT_BYTES = 8 * 1024 * 1024;
 const CARD_KEY_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let mallRuntimeReady = false;
@@ -173,7 +173,7 @@ const DEFAULT_MARKDOWN_GUIDES = [
 const MALL_DEFAULT_SETTINGS = {
   siteInfo: {
     title: "Linuxdo Mall",
-    subtitle: "官方权益流转中心",
+    subtitle: "商城商品与订单中心",
     footer: "© 2026 Linuxdo Mall. All Rights Reserved.",
     contact: "TG: @rights_center",
     contacts: [
@@ -191,7 +191,7 @@ const MALL_DEFAULT_SETTINGS = {
   },
   announcement: {
     active: true,
-    top: "欢迎来到 Linuxdo Mall，商品、订单、卡密、评价和扫雷数据均保存在 Cloudflare D1。",
+    top: "欢迎来到 Linuxdo Mall，商品、订单、卡密、优惠券、评价和活动数据均保存在 Cloudflare D1。",
     type: "info",
     style: "soft",
     title: "商城公告",
@@ -2802,7 +2802,7 @@ function buildPushMeShell(options = {}) {
     }
   </style>
   ${showHeader ? `<div class="lm-head">
-    <span class="lm-brand">Linuxdo-Mall</span>
+    <span class="lm-brand">Linuxdo Mall</span>
     <span class="lm-badge">${escapePushHtml(options.badge || "通知")}</span>
   </div>
   <h2 class="lm-title">${escapePushHtml(options.title || "商城通知")}</h2>` : ""}
@@ -2820,7 +2820,7 @@ function buildPushMeShell(options = {}) {
     <div class="lm-md">${renderPushMeMarkdownHtml(options.bodyMarkdown || "")}</div>
   </div>
   <div class="lm-footer">
-    <span>PushMe · Linuxdo-Mall</span>
+    <span>PushMe · Linuxdo Mall</span>
   </div>
 </section>`.trim();
 }
@@ -4890,7 +4890,7 @@ async function handleMallAdminImageProxy(request, env, admin) {
   const response = await fetch(targetUrl, {
     headers: {
       Accept: "image/png,image/jpeg,image/webp,image/gif,image/avif;q=0.8,*/*;q=0.1",
-      "User-Agent": "Linuxdo-Mall Image Proxy"
+      "User-Agent": "Linuxdo Mall Image Proxy"
     },
     cf: { cacheTtl: 60, cacheEverything: false }
   });
@@ -8608,7 +8608,7 @@ async function exportMallAdminJsonData(env, admin, options = {}) {
   ]);
   const backup = {
     exportedAt: new Date().toISOString(),
-    project: "Linuxdo-Mall Cloudflare",
+    project: "Linuxdo Mall Cloudflare",
     scope,
     tables: Array.from(selectedTables),
     admin: {
@@ -8765,7 +8765,7 @@ async function importMallAdminData(request, env, admin) {
 
 async function importMallAdminJsonData(backup, env, admin, options = {}) {
   await ensureMallSeed(env);
-  if (!backup || typeof backup !== "object" || backup.project !== "Linuxdo-Mall Cloudflare") {
+  if (!backup || typeof backup !== "object" || !["Linuxdo Mall Cloudflare", "Linuxdo-Mall Cloudflare"].includes(backup.project)) {
     throw new ApiError(400, "invalid_backup", "备份文件格式不正确");
   }
   const mode = normalizeChoice(backup.mode || "merge", ["merge", "replace"], "merge");
@@ -10730,7 +10730,7 @@ function mergeMallSettings(base, patch) {
     theme: normalizedPatch.theme || base.theme || "system"
   };
   merged.siteInfo.title = normalizeText(merged.siteInfo.title || "Linuxdo Mall", 80);
-  merged.siteInfo.subtitle = normalizeText(merged.siteInfo.subtitle || "官方权益流转中心", 120);
+  merged.siteInfo.subtitle = normalizeText(merged.siteInfo.subtitle || "商城商品与订单中心", 120);
   merged.siteInfo.footer = normalizeText(merged.siteInfo.footer || "", 200);
   merged.siteInfo.contact = normalizeText(merged.siteInfo.contact || "", 120);
   if (!Array.isArray(patchSiteInfo.contacts) && normalizeText(patchSiteInfo.contact || "", 120)) {
