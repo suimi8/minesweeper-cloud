@@ -1,0 +1,607 @@
+/* ==========================================================================
+   Global Festival Themes Architecture
+   全局节日主题自适应系统 - 样式定义
+   ========================================================================== */
+
+/* 
+ * 1. Spring Festival (春节) - 红色与金色为主，喜庆祥和
+ */
+html[data-theme="spring_festival"],
+body[data-theme="spring_festival"] {
+    --primary: #ff1a1a;
+    /* 亮红 */
+    --primary-glow: rgba(255, 26, 26, 0.6);
+    --primary-hover: #ff4d4d;
+    --on-primary: #fffce6;
+
+    --bg: #4a0505;
+    /* 明显的深红背景 */
+    --bg-subtle: #660a0a;
+    --sidebar: #3d0404;
+
+    --card: rgba(255, 26, 26, 0.1);
+    --card-hover: rgba(255, 26, 26, 0.2);
+    --border: rgba(255, 215, 0, 0.4);
+
+    --text: #fffcf0;
+    --text-secondary: #ffebcc;
+    --text-dim: #ffcc99;
+
+    --accent: #ffd700;
+    --accent-glow: rgba(255, 215, 0, 0.5);
+
+    /* Fallback gradient if image fails */
+    background: linear-gradient(135deg, #4a0505 0%, #1a0202 100%);
+}
+
+/* 
+ * 2. Valentine's Day (情人节) - 粉色与浪漫紫
+ */
+html[data-theme="valentine"],
+body[data-theme="valentine"] {
+    --primary: #ff69b4;
+    --primary-glow: rgba(255, 105, 180, 0.6);
+    --primary-hover: #ff1493;
+    --on-primary: #ffffff;
+
+    --bg: #2d0a1e;
+    /* 深紫红 */
+    --bg-subtle: #45102e;
+    --sidebar: #260819;
+
+    --card: rgba(255, 105, 180, 0.05);
+    --card-hover: rgba(255, 105, 180, 0.1);
+    --border: rgba(255, 182, 193, 0.25);
+
+    --text: #fff0f5;
+    --text-secondary: #ffe4e1;
+    --text-dim: #ffb6c1;
+
+    --accent: #ffb7b2;
+    --accent-glow: rgba(255, 183, 178, 0.4);
+
+    --success: #34d399;
+    --warning: #fbbf24;
+    --danger: #f87171;
+
+    --glass-bg: rgba(255, 105, 180, 0.03);
+    background: linear-gradient(135deg, #2d0a1e 0%, #12020a 100%);
+}
+
+/* 
+ * 3. Qingming (清明节) - 绿色与青色，清新淡雅 (Emerald 变体)
+ * 注：保持庄重，不宜过于鲜艳
+ */
+html[data-theme="qingming"],
+body[data-theme="qingming"] {
+    --primary: #10b981;
+    --primary-glow: rgba(16, 185, 129, 0.3);
+    --primary-hover: #059669;
+    --on-primary: #ffffff;
+
+    --bg: #064e3b;
+    /* 深绿 */
+    --bg-subtle: #065f46;
+    --sidebar: #022c22;
+
+    --card: rgba(16, 185, 129, 0.04);
+    --card-hover: rgba(16, 185, 129, 0.08);
+    --border: rgba(110, 231, 183, 0.15);
+
+    --text: #ecfdf5;
+    --text-secondary: #d1fae5;
+    --text-dim: #6ee7b7;
+
+    --accent: #34d399;
+    --accent-glow: rgba(52, 211, 153, 0.2);
+
+    --glass-bg: rgba(16, 185, 129, 0.02);
+    background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+}
+
+/* 
+ * 4. Labor Day (劳动节) - 橙色与蓝色，活力与勤劳
+ */
+html[data-theme="labor_day"],
+body[data-theme="labor_day"] {
+    --primary: #f97316;
+    --primary-glow: rgba(249, 115, 22, 0.5);
+    --primary-hover: #ea580c;
+    --on-primary: #ffffff;
+
+    --bg: #1e1b4b;
+    /* 深靛蓝，衬托橙色 */
+    --bg-subtle: #312e81;
+    --sidebar: #172554;
+
+    --card: rgba(249, 115, 22, 0.05);
+    --card-hover: rgba(249, 115, 22, 0.1);
+    --border: rgba(253, 186, 116, 0.2);
+
+    --text: #fff7ed;
+    --text-secondary: #ffedd5;
+    --text-dim: #fb923c;
+
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.4);
+
+    --glass-bg: rgba(249, 115, 22, 0.03);
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+}
+
+/* 
+ * 5. Dragon Boat Festival (端午节) - 深绿与粽黄
+ */
+html[data-theme="dragon_boat"],
+body[data-theme="dragon_boat"] {
+    --primary: #84cc16;
+    /* 嫩绿 */
+    --primary-glow: rgba(21, 128, 61, 0.4);
+    --primary-hover: #166534;
+    --on-primary: #feffff;
+
+    --bg: #14532d;
+    /* 森林绿 */
+    --bg-subtle: #166534;
+    --sidebar: #052e16;
+
+    --card: rgba(21, 128, 61, 0.06);
+    --card-hover: rgba(21, 128, 61, 0.12);
+    --border: rgba(250, 204, 21, 0.2);
+
+    --text: #f0fdf4;
+    --text-secondary: #dcfce7;
+    --text-dim: #86efac;
+
+    --accent: #facc15;
+    --accent-glow: rgba(234, 179, 8, 0.4);
+
+    --glass-bg: rgba(21, 128, 61, 0.04);
+    background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+}
+
+/* 
+ * 6. Mid-Autumn Festival (中秋节) - 深蓝与月光白/金
+ */
+html[data-theme="mid_autumn"],
+body[data-theme="mid_autumn"] {
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --primary-hover: #4f46e5;
+    --on-primary: #ffffff;
+
+    --bg: #1e1b4b;
+    /* 深夜蓝 */
+    --bg-subtle: #312e81;
+    --sidebar: #172554;
+
+    --card: rgba(99, 102, 241, 0.05);
+    --card-hover: rgba(99, 102, 241, 0.1);
+    --border: rgba(253, 224, 71, 0.2);
+
+    --text: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-dim: #94a3b8;
+
+    --accent: #facc15;
+    --accent-glow: rgba(250, 204, 21, 0.5);
+
+    --glass-bg: rgba(99, 102, 241, 0.04);
+    background: linear-gradient(135deg, #172554 0%, #020617 100%);
+}
+
+/* 
+ * 7. National Day (国庆节) - 红旗红与五角星黄，庄重热烈
+ */
+html[data-theme="national_day"],
+body[data-theme="national_day"] {
+    --primary: #ef4444;
+    --primary-glow: rgba(222, 41, 16, 0.5);
+    --primary-hover: #b91c1c;
+    --on-primary: #ffde00;
+
+    --bg: #450a0a;
+    /* 暗红 */
+    --bg-subtle: #7f1d1d;
+    --sidebar: #450a0a;
+
+    --card: rgba(222, 41, 16, 0.05);
+    --card-hover: rgba(222, 41, 16, 0.1);
+    --border: rgba(255, 222, 0, 0.25);
+
+    --text: #fef2f2;
+    --text-secondary: #fecaca;
+    --text-dim: #fca5a5;
+
+    --accent: #fde047;
+    --accent-glow: rgba(255, 222, 0, 0.5);
+
+    --glass-bg: rgba(222, 41, 16, 0.04);
+    background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+}
+
+/* 
+ * 8. Christmas (圣诞节) - 圣诞红与松树绿，还有雪白
+ */
+html[data-theme="christmas"],
+body[data-theme="christmas"] {
+    --primary: #dc2626;
+    --primary-glow: rgba(220, 38, 38, 0.5);
+    --primary-hover: #b91c1c;
+    --on-primary: #ffffff;
+
+    --bg: #14532d;
+    /* 圣诞绿背景 */
+    --bg-subtle: #166534;
+    --sidebar: #052e16;
+
+    --card: rgba(220, 38, 38, 0.06);
+    --card-hover: rgba(22, 101, 52, 0.15);
+    --border: rgba(220, 38, 38, 0.25);
+
+    --text: #f0fdf4;
+    --text-secondary: #dcfce7;
+    --text-dim: #86efac;
+
+    --accent: #ef4444;
+    /* 红色点缀 */
+    --accent-glow: rgba(22, 163, 74, 0.4);
+
+    --success: #22c55e;
+    --warning: #facc15;
+
+    --glass-bg: rgba(220, 38, 38, 0.04);
+    background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+}
+
+/* 
+ * 9. New Year (元旦) - 炫彩与科技蓝，迎接未来
+ */
+html[data-theme="new_year"],
+body[data-theme="new_year"] {
+    --primary: #d946ef;
+    /* 紫红 */
+    --primary-glow: rgba(139, 92, 246, 0.5);
+    --primary-hover: #7c3aed;
+    --on-primary: #ffffff;
+
+    --bg: #2e1065;
+    /* 深紫 */
+    --bg-subtle: #4c1d95;
+    --sidebar: #1e1b4b;
+
+    --card: rgba(139, 92, 246, 0.05);
+    --card-hover: rgba(139, 92, 246, 0.1);
+    --border: rgba(216, 180, 254, 0.2);
+
+    --text: #faf5ff;
+    --text-secondary: #e9d5ff;
+    --text-dim: #c084fc;
+
+    --accent: #22d3ee;
+    --accent-glow: rgba(6, 182, 212, 0.4);
+    background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 100%);
+}
+
+/* ==========================================================================
+   Festival UI Assets & Overrides
+   节日专属 UI 资源与覆盖样式
+   ========================================================================== */
+
+/* 
+ * Background Image Configuration 
+ * 为所有节日配置背景图 - 增加遮罩以提升文字可读性
+ */
+
+/* Common Readability Fix for cards on busy backgrounds */
+body[data-theme="spring_festival"] .card,
+body[data-theme="valentine"] .card,
+body[data-theme="dragon_boat"] .card,
+body[data-theme="mid_autumn"] .card,
+body[data-theme="national_day"] .card,
+body[data-theme="christmas"] .card,
+body[data-theme="new_year"] .card {
+    background-color: rgba(5, 5, 10, 0.95) !important;
+    /* High opacity dark bg */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* 1. Spring Festival */
+html[data-theme="spring_festival"] body,
+body[data-theme="spring_festival"] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/spring_festival_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 2. Valentine */
+html[data-theme="valentine"] body,
+body[data-theme="valentine"] {
+    background-image: linear-gradient(rgba(45, 10, 30, 0.7), rgba(18, 2, 10, 0.8)), url('../img/valentine_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 3. Dragon Boat */
+html[data-theme="dragon_boat"] body,
+body[data-theme="dragon_boat"] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/dragon_boat_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 4. Mid Autumn */
+html[data-theme="mid_autumn"] body,
+body[data-theme="mid_autumn"] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/mid_autumn_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 5. National Day */
+html[data-theme="national_day"] body,
+body[data-theme="national_day"] {
+    background-image: linear-gradient(rgba(69, 10, 10, 0.7), rgba(0, 0, 0, 0.6)), url('../img/national_day_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 6. Christmas */
+html[data-theme="christmas"] body,
+body[data-theme="christmas"] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/christmas_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* 7. New Year */
+html[data-theme="new_year"] body,
+body[data-theme="new_year"] {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/new_year_bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+
+/* 
+ * Modal Styles 
+ */
+.festival-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.festival-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.festival-modal-content {
+    width: 90%;
+    max-width: 500px;
+    background-color: var(--surface);
+    /* Default */
+    background-size: cover;
+    background-position: center;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transform: scale(0.8);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px;
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+/* Dynamic Modal Backgrounds based on Theme */
+body[data-theme="spring_festival"] .festival-modal-content {
+    background-image: url('../img/spring_festival_modal.png');
+}
+
+body[data-theme="valentine"] .festival-modal-content {
+    background-image: url('../img/valentine_bg.png');
+}
+
+body[data-theme="dragon_boat"] .festival-modal-content {
+    background-image: url('../img/dragon_boat_bg.png');
+}
+
+body[data-theme="mid_autumn"] .festival-modal-content {
+    background-image: url('../img/mid_autumn_bg.png');
+}
+
+body[data-theme="national_day"] .festival-modal-content {
+    background-image: url('../img/national_day_bg.png');
+}
+
+body[data-theme="christmas"] .festival-modal-content {
+    background-image: url('../img/christmas_bg.png');
+}
+
+body[data-theme="new_year"] .festival-modal-content {
+    background-image: url('../img/new_year_bg.png');
+}
+
+.festival-modal-overlay.active .festival-modal-content {
+    transform: scale(1);
+}
+
+.festival-modal-text {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: auto;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    /* For dark mode readability inside modal */
+    color: #333;
+}
+
+.festival-modal-title {
+    font-size: 1.5rem;
+    color: #e60012;
+    /* Default Red, will be overridden */
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Theme specific title colors override */
+body[data-theme="mid_autumn"] .festival-modal-title {
+    color: #4f46e5;
+}
+
+body[data-theme="dragon_boat"] .festival-modal-title {
+    color: #15803d;
+}
+
+body[data-theme="christmas"] .festival-modal-title {
+    color: #dc2626;
+}
+
+body[data-theme="valentine"] .festival-modal-title {
+    color: #ff1493;
+}
+
+.festival-modal-body {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.festival-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    z-index: 10;
+}
+
+.festival-modal-close:hover {
+    background: rgba(220, 38, 38, 0.8);
+}
+
+.festival-btn {
+    background: linear-gradient(135deg, var(--primary), var(--warning));
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 15px var(--primary-glow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.festival-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--primary-glow);
+}
+
+/* Lantern Animation */
+@keyframes float-y {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.festival-decoration-lantern {
+    position: fixed;
+    top: 0;
+    width: 80px;
+    height: auto;
+    z-index: 999;
+    pointer-events: none;
+    animation: float-y 6s ease-in-out infinite;
+}
+
+.lantern-left {
+    left: 5%;
+}
+
+.lantern-right {
+    right: 5%;
+    animation-delay: 2s;
+}
+
+/* ==========================================================================
+   High Contrast Fixes for Inputs on Festival Themes
+   修复节日主题下输入框对比度低的问题
+   ========================================================================== */
+
+body[data-theme="spring_festival"] input, body[data-theme="spring_festival"] select, body[data-theme="spring_festival"] textarea,
+body[data-theme="valentine"] input, body[data-theme="valentine"] select, body[data-theme="valentine"] textarea,
+body[data-theme="qingming"] input, body[data-theme="qingming"] select, body[data-theme="qingming"] textarea,
+body[data-theme="labor_day"] input, body[data-theme="labor_day"] select, body[data-theme="labor_day"] textarea,
+body[data-theme="dragon_boat"] input, body[data-theme="dragon_boat"] select, body[data-theme="dragon_boat"] textarea,
+body[data-theme="mid_autumn"] input, body[data-theme="mid_autumn"] select, body[data-theme="mid_autumn"] textarea,
+body[data-theme="national_day"] input, body[data-theme="national_day"] select, body[data-theme="national_day"] textarea,
+body[data-theme="christmas"] input, body[data-theme="christmas"] select, body[data-theme="christmas"] textarea,
+body[data-theme="new_year"] input, body[data-theme="new_year"] select, body[data-theme="new_year"] textarea {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+body[data-theme="spring_festival"] ::placeholder,
+body[data-theme="valentine"] ::placeholder,
+body[data-theme="qingming"] ::placeholder,
+body[data-theme="labor_day"] ::placeholder,
+body[data-theme="dragon_boat"] ::placeholder,
+body[data-theme="mid_autumn"] ::placeholder,
+body[data-theme="national_day"] ::placeholder,
+body[data-theme="christmas"] ::placeholder,
+body[data-theme="new_year"] ::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Ensure modal text is readable */
+body[data-theme="spring_festival"] .modal-content,
+body[data-theme="valentine"] .modal-content,
+body[data-theme="qingming"] .modal-content,
+body[data-theme="labor_day"] .modal-content,
+body[data-theme="dragon_boat"] .modal-content,
+body[data-theme="mid_autumn"] .modal-content,
+body[data-theme="national_day"] .modal-content,
+body[data-theme="christmas"] .modal-content,
+body[data-theme="new_year"] .modal-content {
+    color: #ffffff !important;
+}

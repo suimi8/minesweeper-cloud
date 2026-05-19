@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="Linuxdo-Mall Cloudflare 原生商城，支持 Linux.do 登录、商品、订单、卡密、优惠券、评价、后台和扫雷娱乐功能。">
+    <meta name="theme-color" content="#050509">
+    <meta name="color-scheme" content="dark light">
+    <title>Linuxdo-Mall</title>
+    <link id="siteFavicon" rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/mall.css">
+    <script defer src="/mall.js"></script>
+  </head>
+  <body data-theme="system">
+    <main class="mall-app" data-auth-state="checking">
+      <nav class="topbar" aria-label="主导航">
+        <a class="brand" href="/" data-route="/">
+          <span class="brand-logo" data-site-logo>L</span>
+          <span>
+            <strong data-site-title>Linuxdo Mall</strong>
+            <small data-site-subtitle>官方权益流转中心</small>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <a class="nav-pill admin-only" href="/admin" data-route="/admin" hidden>后台</a>
+          <div class="user-menu auth-only front-feature" id="userMenu" hidden>
+            <button class="user-panel topbar-user user-menu-trigger" id="userMenuButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="userMenuPopover">
+              <span class="avatar" id="userAvatar">U</span>
+              <span class="user-menu-user">
+                <strong id="userName">未登录</strong>
+                <small id="userMeta">登录后同步订单和扫雷数据</small>
+              </span>
+              <span class="user-menu-caret" aria-hidden="true">⌄</span>
+            </button>
+            <div class="user-menu-popover" id="userMenuPopover" role="menu" hidden>
+              <button class="user-menu-item user-menu-contact user-only" type="button" data-user-menu-chat role="menuitem" hidden>
+                <span class="user-menu-item-main">
+                  <strong>联系管理员</strong>
+                  <small id="userMenuChatHint">订单咨询和普通咨询</small>
+                </span>
+                <em class="user-menu-badge" data-chat-unread hidden>0</em>
+              </button>
+              <label class="user-menu-select front-feature" role="none">
+                <span class="user-menu-item-main">
+                  <strong>云端游戏</strong>
+                  <small>选择娱乐功能</small>
+                </span>
+                <select id="cloudGameSelect" aria-label="云端游戏">
+                  <option value="">选择游戏</option>
+                  <option value="/games/minesweeper/">扫雷</option>
+                </select>
+              </label>
+              <a class="user-menu-item front-feature" href="/orders" data-route="/orders" role="menuitem">
+                <span class="user-menu-item-main">
+                  <strong>我的订单</strong>
+                  <small>查看购买记录和订单咨询</small>
+                </span>
+              </a>
+              <a class="user-menu-item front-feature" href="/profile" data-route="/profile" role="menuitem">
+                <span class="user-menu-item-main">
+                  <strong>用户设置</strong>
+                  <small>邮箱通知、Bug 反馈等配置</small>
+                </span>
+              </a>
+              <button class="user-menu-item is-danger" id="logoutButton" type="button" role="menuitem">
+                <span class="user-menu-item-main">
+                  <strong>退出登录</strong>
+                  <small>清除当前登录状态</small>
+                </span>
+              </button>
+            </div>
+          </div>
+          <a class="nav-pill guest-only is-primary" id="loginButton" href="/api/auth/linuxdo/start">Linux.do 登录</a>
+        </div>
+      </nav>
+      <section class="chat-window-portal" id="chatWindowPortal" hidden aria-live="polite"></section>
+
+      <section class="login-banner" id="loginBanner" hidden>
+        <div class="login-banner-copy">
+          <p class="eyebrow">LINUX.DO CONNECT</p>
+          <h1>汇智商城</h1>
+          <p>请先使用 Linux.do 登录。登录后才会展示商品、订单、云端游戏和咨询入口。</p>
+        </div>
+        <div class="login-panel">
+          <strong>账号验证</strong>
+          <span>商城内容仅对已登录用户开放</span>
+          <a class="btn btn-primary" id="loginBannerButton" href="/api/auth/linuxdo/start">使用 Linux.do 登录</a>
+        </div>
+      </section>
+
+      <section class="announcement" id="announcementBar" aria-label="商城公告" hidden></section>
+
+      <section class="view-shell" id="homeView" hidden>
+        <section class="home-toolbar">
+          <div class="toolbar-main">
+            <div class="toolbar-title">
+              <p class="eyebrow">PRODUCTS</p>
+              <h2>在售商品 <strong id="productCount">0</strong></h2>
+            </div>
+            <div class="filter-list category-strip" id="categoryFilters"></div>
+          </div>
+          <div class="toolbar-actions">
+            <label class="search-box">
+              <span>搜索</span>
+              <input id="searchInput" type="search" placeholder="商品名称 / 描述">
+            </label>
+            <button class="btn btn-ghost" id="refreshButton" type="button">刷新</button>
+          </div>
+        </section>
+
+        <section class="home-grid">
+          <section class="content-column">
+            <section class="section-head" id="products">
+              <div>
+                <p class="eyebrow">PRODUCTS</p>
+                <h2>商品</h2>
+              </div>
+            </section>
+            <div class="product-grid" id="productGrid"></div>
+          </section>
+
+          <aside class="activity-rail">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>热销榜</h2>
+                <span>Top 10</span>
+              </div>
+              <div class="rank-list" id="hotList"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <h2>近期成交</h2>
+              </div>
+              <div class="transaction-list" id="transactionList"></div>
+            </section>
+            <section class="panel" id="adPanel" hidden>
+              <div class="panel-head">
+                <h2>推荐</h2>
+              </div>
+              <div class="ad-list" id="adList"></div>
+            </section>
+          </aside>
+        </section>
+      </section>
+
+      <section class="view-shell" id="productView" hidden></section>
+      <section class="view-shell" id="ordersView" hidden></section>
+      <section class="view-shell" id="profileView" hidden></section>
+      <section class="view-shell" id="feedbackView" hidden></section>
+      <section class="view-shell admin-shell" id="adminView" hidden></section>
+      <footer class="site-footer" id="siteFooter" hidden></footer>
+    </main>
+
+    <div class="modal-layer" id="modalLayer" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="icon-button modal-close" id="modalClose" type="button" aria-label="关闭">×</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  </body>
+</html>

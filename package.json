@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build:pages": "node scripts/build-pages.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:pages": "npm run build:pages && Copy-Item wrangler.pages.toml wrangler.toml -Force && wrangler pages deploy dist --project-name minesweeper-cloud && Copy-Item wrangler.worker.toml wrangler.toml -Force",
+    "db:migrate": "wrangler d1 migrations apply minesweeper-cloud"
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  }
+}

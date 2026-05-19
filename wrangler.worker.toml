@@ -1,0 +1,17 @@
+name = "minesweeper-cloud"
+main = "src/worker.js"
+compatibility_date = "2026-05-13"
+
+[triggers]
+crons = ["0 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "minesweeper-cloud"
+database_id = "2c406393-ebf9-465c-9572-25f736f56c3c"
+migrations_dir = "migrations"
+
+[assets]
+directory = "./"
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/login", "/admin", "/games/minesweeper/api/*", "/games/minesweeper/login", "/games/minesweeper/admin"]

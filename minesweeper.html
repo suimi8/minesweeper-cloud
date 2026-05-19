@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="跨平台扫雷游戏，支持桌面端、移动端和 PWA 离线运行。">
+    <meta name="theme-color" content="#277c63">
+    <meta name="color-scheme" content="light">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="扫雷">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>扫雷</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <main class="app" id="app" data-game-state="ready" data-level="beginner">
+      <div class="layout">
+        <aside class="leaderboard-panel" aria-labelledby="leaderboardTitle">
+          <header class="leaderboard-head">
+            <div>
+              <p class="eyebrow">LEADERBOARD</p>
+              <h2 id="leaderboardTitle">排行榜</h2>
+            </div>
+            <span id="leaderboardStatus">读取中</span>
+          </header>
+          <div class="side-controls">
+            <div class="level-switch" aria-label="难度选择">
+              <button type="button" class="level-button is-active" data-level-button="beginner">初级</button>
+              <button type="button" class="level-button" data-level-button="intermediate">中级</button>
+              <button type="button" class="level-button" data-level-button="expert">高级</button>
+            </div>
+            <button type="button" class="cloud-toggle" id="cloudToggle">返回商城登录</button>
+          </div>
+          <section class="user-card" id="userCard" aria-label="用户信息">
+            <div class="user-avatar" id="userAvatar">未</div>
+            <div class="user-meta">
+              <strong id="userName">未登录</strong>
+            <span id="userProvider">商城登录态</span>
+            <span id="userSyncState">请先登录商城</span>
+            </div>
+          </section>
+          <section class="campaign-card" id="campaignCard" aria-label="扫雷活动">
+            <div>
+              <span class="campaign-kicker">活动优惠</span>
+              <strong id="campaignTitle">首通领券</strong>
+              <p id="campaignText">首通自动券，第一名额外赏金。</p>
+            </div>
+            <div class="campaign-coupons" id="campaignCoupons"></div>
+          </section>
+          <div class="side-tabs" role="tablist" aria-label="侧边内容">
+            <button type="button" class="side-tab is-active" data-side-tab="leaderboard" role="tab" aria-selected="true">榜单</button>
+            <button type="button" class="side-tab" data-side-tab="learn" role="tab" aria-selected="false">学习</button>
+          </div>
+          <div class="side-pane" id="leaderboardPane">
+            <ol class="leaderboard-list" id="leaderboardList"></ol>
+            <div class="my-rank" id="myRank">登录后显示你的排名</div>
+          </div>
+          <div class="side-pane" id="learnPane" hidden>
+            <div class="learn-intro">当前数字格会随机展示这些表达式，结果就是相邻雷数。</div>
+            <div class="learn-list" id="learnList"></div>
+          </div>
+        </aside>
+
+        <section class="shell" aria-label="扫雷游戏">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">MINESWEEPER</p>
+            <h1>扫雷</h1>
+          </div>
+          <strong class="function-counter" id="mineCounter" aria-live="polite" data-total-mines="10" data-marked-cells="0" data-remaining-mines="10">
+            <span class="function-label">剩余雷数</span>
+            <span class="function-rule">f(m,b)=m-b</span>
+            <span class="function-value">f(10,0)=010</span>
+          </strong>
+        </header>
+
+        <section class="status-panel" aria-label="游戏状态">
+          <button type="button" class="face-button" id="resetButton" aria-label="重新开始" title="重新开始">🙂</button>
+          <button type="button" class="restart-button" id="restartRoundButton">重来一局</button>
+          <div class="meter">
+            <span class="meter-label">用时</span>
+            <strong id="timer">000</strong>
+          </div>
+        </section>
+
+        <section class="board-wrap" aria-live="polite">
+          <div class="board" id="board" role="grid" aria-label="扫雷棋盘"></div>
+        </section>
+
+        <footer class="info-bar">
+          <span id="stateText">点击任意格开始</span>
+          <span>
+            <span id="cloudText">本地</span>
+            <span aria-hidden="true"> · </span>
+            <span id="bestText">最佳: --</span>
+          </span>
+        </footer>
+        </section>
+      </div>
+    </main>
+
+    <div class="modal-backdrop" id="authModal" hidden>
+      <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <header class="dialog-head">
+          <div>
+            <p class="eyebrow">MALL SESSION</p>
+            <h2 id="authTitle">请先登录商城</h2>
+          </div>
+          <button type="button" class="icon-button" id="closeAuthModal" aria-label="关闭">×</button>
+        </header>
+
+        <div class="cloud-account" id="cloudAccount" hidden>
+          <span id="cloudUser">未登录</span>
+          <button type="button" id="logoutButton">退出</button>
+        </div>
+
+        <form class="auth-form" id="authForm" hidden>
+          <input id="usernameInput" name="username" autocomplete="username" maxlength="24" placeholder="用户名" required>
+          <input id="passwordInput" name="password" autocomplete="current-password" minlength="6" maxlength="128" type="password" placeholder="密码" required>
+          <div class="auth-actions">
+            <button type="submit" data-auth-action="login">登录</button>
+            <button type="button" data-auth-action="register">注册</button>
+          </div>
+        </form>
+
+        <div class="oauth-divider"><span>使用 Linuxdo-Mall 登录态同步</span></div>
+        <a class="linuxdo-login" id="linuxdoLogin" href="/">返回商城登录</a>
+      </section>
+    </div>
+
+    <main class="admin-page" id="adminModal" hidden>
+      <section class="admin-shell" aria-labelledby="adminTitle">
+        <header class="admin-page-head">
+          <div>
+            <p class="eyebrow">ADMIN</p>
+            <h2 id="adminTitle">后台管理</h2>
+          </div>
+          <a class="admin-return" id="closeAdminModal" href="./">返回游戏</a>
+        </header>
+
+        <div class="admin-status" id="adminStatus">读取中</div>
+
+        <nav class="admin-modules" aria-label="后台功能模块">
+          <button type="button" class="admin-module-button is-active" data-admin-module="leaderboard">榜单管理</button>
+          <button type="button" class="admin-module-button" data-admin-module="users">用户管理</button>
+        </nav>
+
+        <section class="admin-workspace">
+          <aside class="admin-sidebar">
+            <section class="admin-panel" aria-label="总览">
+              <header class="admin-section-head">
+                <h3>系统总览</h3>
+                <span id="adminOverviewNote">实时数据</span>
+              </header>
+              <div class="admin-stats" id="adminStats"></div>
+              <div class="admin-module-grid" id="adminModuleSummary"></div>
+            </section>
+          </aside>
+
+          <section class="admin-main">
+            <section class="admin-panel" data-admin-panel="leaderboard" aria-label="榜单管理" hidden>
+              <header class="admin-section-head">
+                <h3>榜单管理</h3>
+                <div class="admin-actions">
+                  <button type="button" class="admin-action" id="leaderboardSelectAll">全选</button>
+                  <button type="button" class="admin-action" id="leaderboardClearSelected">删除选中</button>
+                  <button type="button" class="admin-action" data-clear-leaderboard="all">清空全部榜单</button>
+                </div>
+              </header>
+              <div class="admin-levels" id="adminLevels"></div>
+              <div class="admin-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>选中</th>
+                      <th>难度</th>
+                      <th>排名</th>
+                      <th>用户名</th>
+                      <th>时间</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminScores"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="admin-panel" data-admin-panel="users" aria-label="用户管理" hidden>
+              <header class="admin-section-head">
+                <h3>用户管理</h3>
+                <div class="admin-actions">
+                  <button type="button" class="admin-action" id="userSelectAll">全选</button>
+                  <button type="button" class="admin-action" id="userDeleteSyncSelected">删除云端数据</button>
+                  <button type="button" class="admin-action" id="userDeleteSelected">删除选中用户</button>
+                </div>
+                <span id="adminUserCount">0 人</span>
+              </header>
+              <div class="admin-table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>选中</th>
+                      <th>用户名</th>
+                      <th>Linux.do ID</th>
+                      <th>成绩</th>
+                      <th>同步</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminUsers"></tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

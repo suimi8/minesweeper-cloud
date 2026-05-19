@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS mall_conversations (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  user_name TEXT NOT NULL DEFAULT '',
+  admin_user_id TEXT NOT NULL DEFAULT '',
+  subject TEXT NOT NULL DEFAULT '',
+  product_id TEXT NOT NULL DEFAULT '',
+  order_id TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'open',
+  last_message TEXT NOT NULL DEFAULT '',
+  last_sender TEXT NOT NULL DEFAULT '',
+  unread_user INTEGER NOT NULL DEFAULT 0,
+  unread_admin INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS mall_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id TEXT NOT NULL,
+  sender_id TEXT NOT NULL,
+  sender_name TEXT NOT NULL DEFAULT '',
+  sender_role TEXT NOT NULL DEFAULT 'user',
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
