@@ -8608,7 +8608,7 @@ async function exportMallAdminJsonData(env, admin, options = {}) {
   ]);
   const backup = {
     exportedAt: new Date().toISOString(),
-    project: "Linuxdo Mall Cloudflare",
+    project: "Linuxdo Mall",
     scope,
     tables: Array.from(selectedTables),
     admin: {
@@ -8765,7 +8765,7 @@ async function importMallAdminData(request, env, admin) {
 
 async function importMallAdminJsonData(backup, env, admin, options = {}) {
   await ensureMallSeed(env);
-  if (!backup || typeof backup !== "object" || !["Linuxdo Mall Cloudflare", "Linuxdo-Mall Cloudflare"].includes(backup.project)) {
+  if (!backup || typeof backup !== "object" || !["Linuxdo Mall", "Linuxdo Mall Cloudflare", "Linuxdo-Mall Cloudflare"].includes(backup.project)) {
     throw new ApiError(400, "invalid_backup", "备份文件格式不正确");
   }
   const mode = normalizeChoice(backup.mode || "merge", ["merge", "replace"], "merge");

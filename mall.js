@@ -2417,7 +2417,7 @@ function renderAdminProducts(root) {
     <div class="batch-bar">
       <div>
         <h3>商品管理</h3>
-        <p class="muted">移植原版发布、上下架、售罄、删除和批量处理流程；删除会进入“删除的商品”。</p>
+        <p class="muted">管理商品发布、上下架、售罄、删除和批量处理；删除会进入“删除的商品”。</p>
       </div>
       <div class="row-actions compact">
         <button class="btn btn-ghost" type="button" data-batch-product-status="active">批量上架</button>
@@ -4192,7 +4192,7 @@ function renderAdminBackupSettings(root) {
       <div>
         <p class="eyebrow">BACKUP</p>
         <h3>备份导出</h3>
-        <p class="muted">默认导出全部 D1 SQL 数据库备份；也可以勾选指定范围导出。JSON 仅保留为旧备份兼容，不作为完整恢复格式。</p>
+        <p class="muted">默认导出全部 D1 SQL 数据库备份；也可以勾选指定范围导出。</p>
       </div>
     </div>
     <div class="admin-card backup-export-card">
@@ -4203,7 +4203,7 @@ function renderAdminBackupSettings(root) {
         </div>
         <div class="row-actions compact">
           <button class="btn btn-primary" type="button" data-download-backup>导出 SQL 数据库备份</button>
-          <button class="btn btn-ghost" type="button" data-download-json-backup>导出旧版 JSON</button>
+          <button class="btn btn-ghost" type="button" data-download-json-backup>导出 JSON</button>
           <button class="btn btn-ghost" type="button" data-import-backup>导入备份</button>
         </div>
       </div>
@@ -4216,7 +4216,7 @@ function renderAdminBackupSettings(root) {
       <div class="admin-module-head compact-head">
         <div>
           <h3>备份记录</h3>
-          <p class="muted">记录里会显示类型、范围、表数量和过期时间。旧记录没有这些字段会显示为兼容记录。</p>
+          <p class="muted">记录里会显示类型、范围、表数量和过期时间。</p>
         </div>
         <div class="row-actions compact">
           <span class="badge">手动 ${backupRecordSummary.manual}</span>
@@ -4234,7 +4234,7 @@ function renderAdminBackupSettings(root) {
             <td>${escapeHtml(formatBackupScopeLabel(record.scope || ["all"]))}</td>
             <td>${Number(record.tableCount || 0)}</td>
             <td>${formatBytes(record.sizeBytes)}</td>
-            <td>${record.hasContent ? `<span class="badge badge-success">已保存</span>` : `<span class="badge badge-muted">旧记录</span>`}</td>
+            <td>${record.hasContent ? `<span class="badge badge-success">已保存</span>` : `<span class="badge badge-muted">仅记录</span>`}</td>
             <td>${record.expiresAt ? formatDate(record.expiresAt) : `<span class="badge badge-muted">未设置</span>`}</td>
             <td>${formatDate(record.createdAt)}</td>
             <td class="row-actions compact">
@@ -4278,7 +4278,7 @@ function openBackupImportModal() {
   openModal(`
     <p class="eyebrow">BACKUP IMPORT</p>
     <h2 id="modalTitle">导入数据库备份</h2>
-    <p class="lead">推荐导入本系统导出的 SQL 备份。SQL 导入会按数据库快照恢复完整数据；旧版 JSON 只作为兼容导入。</p>
+    <p class="lead">推荐导入本系统导出的 SQL 备份。SQL 导入会按数据库快照恢复完整数据；JSON 适合导入结构化业务数据。</p>
     <form class="form-grid" id="backupImportForm">
       <label>导入模式
         <select name="mode">
@@ -4524,7 +4524,7 @@ function renderAdminBlacklist(root) {
     <div class="batch-bar">
       <div>
         <h3>风控黑名单</h3>
-        <p class="muted">移植原版黑名单模块，支持 IP 和用户名规则，规则保存在 D1。</p>
+        <p class="muted">支持 IP 和用户名规则，规则保存在 D1。</p>
       </div>
       <button class="btn btn-danger" type="button" data-batch-delete-blacklist>删除选中规则</button>
     </div>
@@ -4647,7 +4647,7 @@ function renderAdminBackup(root) {
       <div>
         <p class="eyebrow">BACKUP</p>
         <h3>备份导出</h3>
-        <p class="muted">这里默认导出并保存 D1 SQL 数据库备份，可直接用于 D1 内恢复或本地 SQLite 导入；JSON 仅作为旧备份兼容。</p>
+        <p class="muted">这里默认导出并保存 D1 SQL 数据库备份，可直接用于 D1 内恢复或本地 SQLite 导入。</p>
       </div>
     </div>
     <div class="admin-card backup-export-card">
@@ -4658,7 +4658,7 @@ function renderAdminBackup(root) {
         </div>
         <div class="row-actions compact">
           <button class="btn btn-primary" type="button" data-download-backup>导出 SQL 数据库备份</button>
-          <button class="btn btn-ghost" type="button" data-download-json-backup>导出旧版 JSON</button>
+          <button class="btn btn-ghost" type="button" data-download-json-backup>导出 JSON</button>
         </div>
       </div>
       ${renderBackupScopeControls(["all"], "exportScope")}
@@ -6973,9 +6973,9 @@ function openBackupRecordModal(recordId) {
         <article><span>创建人</span><strong>${escapeHtml(record.createdBy || "-")}</strong></article>
         <article><span>创建时间</span><strong>${formatDate(record.createdAt)}</strong></article>
         <article><span>过期时间</span><strong>${record.expiresAt ? formatDate(record.expiresAt) : "未设置"}</strong></article>
-        <article><span>保存状态</span><strong>${record.hasContent ? "内容已保存到 D1" : "旧记录，仅有文件名和大小"}</strong></article>
+        <article><span>保存状态</span><strong>${record.hasContent ? "内容已保存到 D1" : "仅保存文件名和大小"}</strong></article>
       </div>
-      <p class="muted">恢复 SQL 备份会先自动生成一份恢复保护备份，然后按该备份中的范围覆盖对应数据。JSON 旧格式只用于兼容导入，不支持一键完整恢复。</p>
+      <p class="muted">恢复 SQL 备份会先自动生成一份恢复保护备份，然后按该备份中的范围覆盖对应数据。</p>
       <div class="row-actions compact">
         <button class="btn btn-primary" type="button" data-modal-download-backup ${canDownload ? "" : "disabled"}>下载备份</button>
         <button class="btn btn-ghost" type="button" data-modal-restore-backup ${canRestore ? "" : "disabled"}>恢复 SQL</button>
